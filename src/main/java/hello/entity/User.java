@@ -22,12 +22,19 @@ public class User {
     Integer id;
     String username;
     String avatar;
+
+    public String getEncryptedPassword() {
+        return encryptedPassword;
+    }
+
+    String encryptedPassword;
     Instant createdAt;
     Instant updatedAt;
 
-    public User(Integer id, String username) {
+    public User(Integer id, String username, String encryptedPassword) {
         this.id = id;
         this.username = username;
+        this.encryptedPassword = encryptedPassword;
         this.avatar = "";
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();

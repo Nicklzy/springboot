@@ -20,28 +20,28 @@ public class UserService implements UserDetailsService {
         save("nick", "123456");
     }
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private Map<String, String> userPasswordMap = new HashMap<>();
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final Map<String, User> users = new HashMap<>();
 
     public void save(String username, String password) {
-        userPasswordMap.put(username, bCryptPasswordEncoder.encode(password));
+        users.put(username, new User(1, username, bCryptPasswordEncoder.encode(password)));
     }
 
-    public String getPassword(String username) {
-        return userPasswordMap.get(username);
-    }
+//    public User getUserById(Integer id) {
+//        return null;
+//    }
 
-    public User getUserById(Integer id) {
-        return null;
+    public User getUserByUserName(String username) {
+        return users.get(username);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (!userPasswordMap.containsKey(username)) {
+        if (!users.containsKey(username)) {
             throw new UsernameNotFoundException(username + " 不存在！");
         }
-        String password = userPasswordMap.get(username);
+        User user = users.get(username);
 
-        return new org.springframework.security.core.userdetails.User(username, password, Collections.emptyList());
+        return new org.springframework.security.core.userdetails.User(username, user.getEncryptedPassword(), Collections.emptyList());
     }
 }
