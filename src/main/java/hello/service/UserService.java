@@ -4,22 +4,27 @@ import hello.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class UserService implements UserDetailsService {
-    private Map<String, String> userPasswordMap = new HashMap<>();
-
-    public UserService() {
-        userPasswordMap.put("nick", "123456");
+    @Inject
+    public UserService(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        save("nick", "123456");
     }
 
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private Map<String, String> userPasswordMap = new HashMap<>();
+
     public void save(String username, String password) {
-        userPasswordMap.put(username, password);
+        userPasswordMap.put(username, bCryptPasswordEncoder.encode(password));
     }
 
     public String getPassword(String username) {
