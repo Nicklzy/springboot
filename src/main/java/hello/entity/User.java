@@ -28,6 +28,19 @@ public class User {
     }
 
     String encryptedPassword;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
     Instant createdAt;
     Instant updatedAt;
 
