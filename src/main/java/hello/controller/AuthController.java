@@ -41,6 +41,30 @@ public class AuthController {
         }
     }
 
+
+    @PostMapping("/auth/register")
+    @ResponseBody
+    public Result register(@RequestBody Map<String, String> usernameAndPassword) {
+        String username = usernameAndPassword.get("username");
+        String password = usernameAndPassword.get("password");
+        if (username == null || password == null) {
+            return new Result("fail", "username/password == null", false);
+        }
+        if (username.length() < 1 || username.length() > 15) {
+            return new Result("fail", "invalid username", false);
+        }
+        if (password.length() < 6 || password.length() > 16) {
+            return new Result("fail", "invalid password", false);
+        }
+        User user = userService.getUserByUserName(username);
+        if (user == null) {
+            userService.save(username, password);
+            return new Result("ok", "success", false);
+        } else {
+            return new Result("fail", "user already exist", false);
+        }
+    }
+
     @PostMapping("/auth/login")
     @ResponseBody
     public Result login(@RequestBody Map<String, String> usernameAndPassword) {
