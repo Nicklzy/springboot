@@ -5,6 +5,7 @@ import hello.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,12 +33,12 @@ public class AuthController {
     @GetMapping("/auth")
     @ResponseBody
     public Object auth() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User loggedInUser = userService.getUserByUserName(username);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loggedInUser = userService.getUserByUserName(authentication == null ? null : authentication.getName());
         if (loggedInUser == null) {
             return new Result("ok", "用户没有登录", false);
         } else {
-            return new Result("ok", null, true, userService.getUserByUserName(username));
+            return new Result("ok", null, true, loggedInUser);
         }
     }
 
