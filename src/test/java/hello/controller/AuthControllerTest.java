@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import javax.servlet.http.HttpSession;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,12 +50,12 @@ class AuthControllerTest {
 
     @Test
     void returnNotLoginByDefault() throws Exception {
-        mvc.perform(get("/auth")).andExpect(status().isOk()).andExpect(result -> Assertions.assertTrue(result.getResponse().getContentAsString(Charset.defaultCharset()).contains("用户没有登录")));
+        mvc.perform(get("/auth")).andExpect(status().isOk()).andExpect(result -> Assertions.assertTrue(result.getResponse().getContentAsString(StandardCharsets.UTF_8).contains("用户没有登录")));
     }
 
     @Test
     void testLogin() throws Exception {
-        mvc.perform(get("/auth")).andExpect(status().isOk()).andExpect(result -> Assertions.assertTrue(result.getResponse().getContentAsString(Charset.defaultCharset()).contains("用户没有登录")));
+        mvc.perform(get("/auth")).andExpect(status().isOk()).andExpect(result -> Assertions.assertTrue(result.getResponse().getContentAsString(StandardCharsets.UTF_8).contains("用户没有登录")));
 
         //使用/auth/login登录
         Map<String, String> userNamePassword = new HashMap<>();
@@ -67,7 +68,7 @@ class AuthControllerTest {
         MvcResult response = mvc.perform(post("/auth/login").contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(new ObjectMapper().writeValueAsString(userNamePassword)))
                 .andExpect(status().isOk())
-                .andExpect(result -> Assertions.assertTrue(result.getResponse().getContentAsString(Charset.defaultCharset()).contains("登录成功")))
+                .andExpect(result -> Assertions.assertTrue(result.getResponse().getContentAsString(StandardCharsets.UTF_8).contains("登录成功")))
                 .andReturn();
 
 
@@ -76,8 +77,8 @@ class AuthControllerTest {
         // 再次检查/auth的返回值，处于登录状态
         mvc.perform(get("/auth").session((MockHttpSession) session)).andExpect(status().isOk())
                 .andExpect(result -> {
-                    System.out.println(result.getResponse().getContentAsString(Charset.defaultCharset()));
-                    Assertions.assertTrue(result.getResponse().getContentAsString(Charset.defaultCharset()).contains("nick"));
+                    System.out.println(result.getResponse().getContentAsString(StandardCharsets.UTF_8));
+                    Assertions.assertTrue(result.getResponse().getContentAsString(StandardCharsets.UTF_8).contains("nick"));
                 });
 
     }
