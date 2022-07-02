@@ -1,29 +1,26 @@
 package hello.entity;
 
-public class Result {
+public abstract class Result<T> {
 
 
-    public Result(String status, String msg, boolean isLogin) {
-        this.status = status;
-        this.msg = msg;
-        this.isLogin = isLogin;
+    protected Result(String status, String msg) {
+        this(status, msg, null);
     }
 
-    public Result(String status, String msg, boolean isLogin, Object data) {
+    protected Result(String status, String msg, T data) {
         this.status = status;
         this.msg = msg;
-        this.isLogin = isLogin;
         this.data = data;
     }
 
     String status;
     String msg;
 
-    public Object getData() { //之前返回里没有data就是因为没有配置getter
+    public T getData() { //之前返回里没有data就是因为没有配置getter
         return data;
     }
 
-    Object data;
+    T data;
 
     public String getStatus() {
         return status;
@@ -32,11 +29,5 @@ public class Result {
     public String getMsg() {
         return msg;
     }
-
-    public boolean isLogin() {
-        return isLogin;
-    }
-
-    boolean isLogin;
 
 }
